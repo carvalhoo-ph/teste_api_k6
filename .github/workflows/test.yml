@@ -1,4 +1,4 @@
-name: Run k6 tests
+name: Run k6 tests 3
 
 on:
   push:
