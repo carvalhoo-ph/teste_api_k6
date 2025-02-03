@@ -5,8 +5,8 @@ import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporte
 
 export let options = {
   stages: [
-    { duration: '30s', target: 10 }, // ramp up to 10 users
-    { duration: '1m', target: 10 },  // stay at 10 users
+    { duration: '30s', target: 50 }, // ramp up to 10 users
+    { duration: '1m', target: 50 },  // stay at 10 users
     { duration: '30s', target: 0 },  // ramp down to 0 users
   ],
   thresholds: {
