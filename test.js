@@ -1,5 +1,7 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
+import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.1/index.js';
+import { htmlReport } from 'https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js';
 
 export let options = {
   stages: [
@@ -7,6 +9,9 @@ export let options = {
     { duration: '1m', target: 10 },  // stay at 10 users
     { duration: '30s', target: 0 },  // ramp down to 0 users
   ],
+  thresholds: {
+    http_req_duration: ['p(95)<500'], // 95% das requisições devem ser abaixo de 500ms
+  },
 };
 
 const BASE_URL = 'https://ave288vpc8.execute-api.us-east-1.amazonaws.com/prod';
@@ -43,4 +48,11 @@ export default function () {
   });
 
   sleep(1);
+}
+
+export function handleSummary(data) {
+  return {
+    'stdout': textSummary(data, { indent: ' ', enableColors: true }), // Exibe o resumo no console
+    'report.html': htmlReport(data), // Gera o relatório HTML
+  };
 }
