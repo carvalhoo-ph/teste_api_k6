@@ -25,34 +25,27 @@ const CPFS = [
 export default function () {
   for (const cpf of CPFS) {
     // Test GET /periodo-demonstrativo
-    let periodoDemonstrativoRes = http.get(`${BASE_URL}/periodo-demonstrativo`, {
-      params: { query: { cpf: cpf } }
-    });
+    let periodoDemonstrativoParams = { headers: { 'Content-Type': 'application/json' } };
+    let periodoDemonstrativoPayload = JSON.stringify({ queryStringParameters: { cpf: cpf } });
+    let periodoDemonstrativoRes = http.get(`${BASE_URL}/periodo-demonstrativo`, periodoDemonstrativoPayload, periodoDemonstrativoParams);
     check(periodoDemonstrativoRes, {
       'GET /periodo-demonstrativo status is 200': (r) => r.status === 200,
       'GET /periodo-demonstrativo body is not empty': (r) => r.body.length > 0,
     });
 
-    // Test PUT /login with valid credentials
-    let loginPayload = JSON.stringify({ username: 'test', password: 'test' });
-    let loginParams = { headers: { 'Content-Type': 'application/json' }, params: { query: { cpf: cpf } } };
+    // Test PUT /login with CPF only
+    let loginParams = { headers: { 'Content-Type': 'application/json' } };
+    let loginPayload = JSON.stringify({ queryStringParameters: { cpf: cpf } });
     let loginRes = http.put(`${BASE_URL}/login`, loginPayload, loginParams);
     check(loginRes, {
       'PUT /login status is 200': (r) => r.status === 200,
       'PUT /login body contains token': (r) => JSON.parse(r.body).token !== undefined,
     });
 
-    // Test PUT /login with invalid credentials
-    let invalidLoginPayload = JSON.stringify({ username: 'invalid', password: 'invalid' });
-    let invalidLoginRes = http.put(`${BASE_URL}/login`, invalidLoginPayload, loginParams);
-    check(invalidLoginRes, {
-      'PUT /login with invalid credentials status is 401': (r) => r.status === 401,
-    });
-
     // Test GET /demonstrativo-pgto
-    let demonstrativoPgtoRes = http.get(`${BASE_URL}/demonstrativo-pgto`, {
-      params: { query: { cpf: cpf, ano: 2022, mes: 1 } }
-    });
+    let demonstrativoPgtoParams = { headers: { 'Content-Type': 'application/json' } };
+    let demonstrativoPgtoPayload = JSON.stringify({ queryStringParameters: { cpf: cpf, ano: '2023', mes: '10' } });
+    let demonstrativoPgtoRes = http.get(`${BASE_URL}/demonstrativo-pgto`, demonstrativoPgtoPayload, demonstrativoPgtoParams);
     check(demonstrativoPgtoRes, {
       'GET /demonstrativo-pgto status is 200': (r) => r.status === 200,
       'GET /demonstrativo-pgto body is not empty': (r) => r.body.length > 0,
